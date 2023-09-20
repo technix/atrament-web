@@ -6,6 +6,14 @@ If you want to make customized Atrament build, check out [atrament-core](https:/
 
 If you are looking for example of a web application based on Atrament, check out [atrament-preact-ui](https://github.com/technix/atrament-preact-ui).
 
+## Installation
+
+```npm install @atrament/web```
+
+or
+
+```<script src="https://unpkg.com/@atrament/web@1.0.0/umd/atrament.js"></script>```
+
 ## Usage
 
 Initialization and game start:
