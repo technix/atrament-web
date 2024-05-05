@@ -25,7 +25,7 @@ atrament.init({
     settings: {}
 });
 
-atrament.game.init('/path/to', 'inkfile.ink.json');
+await atrament.game.init('/path/to', 'inkfile.ink.json');
 await atrament.game.start();
 atrament.game.continueStory();
 ```
@@ -35,7 +35,7 @@ State in components:
 ```
 import { useStore } from '@nanostores/preact';
 
-const gameState = useStore(atrament.store());
+const gameState = useStore(atrament.store);
 ```
 
 ## API Documentation
