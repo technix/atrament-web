@@ -1,6 +1,6 @@
-import { map, action } from 'nanostores';
+import { map } from 'nanostores';
 
-const atramentState = map({
+const $state = map({
   settings: {},
   game: {},
   metadata: {},
@@ -9,42 +9,42 @@ const atramentState = map({
 });
 
 function store() {
-  return atramentState;
+  return $state;
 }
 
 function get() {
-  return atramentState.get();
+  return $state.get();
 }
 
-const setKey = action(atramentState, 'setKey', (s, key, value) => {
-  s.setKey(key, value);
-  return s.get();
-});
+const setKey = (key, value) => {
+  $state.setKey(key, value);
+  return $state.get();
+};
 
-const toggleKey = action(atramentState, 'toggleKey', (s, key) => {
-  s.setKey(key, !s.get()[key]);
-  return s.get();
-});
+const toggleKey = (key) => {
+  $state.setKey(key, !$state.get()[key]);
+  return $state.get();
+};
 
-const appendKey = action(atramentState, 'appendKey', (s, key, value) => {
-  s.setKey(key, [...s.get()[key], value]);
-  return s.get();
-});
+const appendKey = (key, value) => {
+  $state.setKey(key, [...$state.get()[key], value]);
+  return $state.get();
+};
 
-const setSubkey = action(atramentState, 'setSubkey', (s, key, subkey, value) => {
-  s.setKey(key, { ...s.get()[key], [subkey]: value });
-  return s.get();
-});
+const setSubkey = (key, subkey, value) => {
+  $state.setKey(key, { ...$state.get()[key], [subkey]: value });
+  return $state.get();
+};
 
-const toggleSubkey = action(atramentState, 'toggleSubkey', (s, key, subkey) => {
-  s.setKey(key, { ...s.get()[key], [subkey]: !s.get()[key][subkey] });
-  return s.get();
-});
+const toggleSubkey = (key, subkey) => {
+  $state.setKey(key, { ...$state.get()[key], [subkey]: !$state.get()[key][subkey] });
+  return $state.get();
+};
 
-const appendSubkey = action(atramentState, 'appendSubkey', (s, key, subkey, value) => {
-  s.setKey(key, { ...s.get()[key], [subkey]: [...s.get()[key][subkey], value] });
-  return s.get();
-});
+const appendSubkey = (key, subkey, value) => {
+  $state.setKey(key, { ...$state.get()[key], [subkey]: [...$state.get()[key][subkey], value] });
+  return $state.get();
+};
 
 export default {
   store,
