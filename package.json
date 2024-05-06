@@ -21,6 +21,7 @@
   "dependencies": {
     "@atrament/core": "1.1.0",
     "howler": "2.2.4",
+    "jszip": "3.10.1",
     "localforage": "1.10.0",
     "nanostores": "0.10.3"
   },
