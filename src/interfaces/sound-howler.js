@@ -1,6 +1,23 @@
 import { Howl, Howler } from 'howler';
 
 const soundCache = {};
+const musicCache = {};
+
+// stop playback of given sound file or all cached sound files
+function $stopPlayback(file, cache) {
+  if (file) {
+    if (cache[file]) {
+      cache[file].stop();
+    }
+  } else {
+    Object.keys(cache).forEach((s) => {
+      if (s && s.fade) {
+        s.fade(undefined, 0, 1);
+      }
+      cache[s].stop();
+    });
+  }
+}
 
 /*
   init({
@@ -56,19 +73,29 @@ function playSound(snd) {
 }
 
 /*
+  stopSound(snd)
+   sound once.
+  - snd: path to a sound file.
+  If no parameter is supplied, all sounds should be stopped
+*/
+function stopSound(snd) {
+  $stopPlayback(snd, soundCache);
+}
+
+/*
   playMusic(mus, loop)
   - mus: path to a music file
   - loop: is track looped? true by default
 */
 function playMusic(mus, loop = true) {
-  if (!soundCache[mus]) {
-    soundCache[mus] = new Howl({
+  if (!musicCache[mus]) {
+    musicCache[mus] = new Howl({
       src: [mus],
       html5: true, // streaming
       loop
     });
   }
-  soundCache[mus].play();
+  musicCache[mus].play();
 }
 
 /*
@@ -77,18 +104,7 @@ function playMusic(mus, loop = true) {
   If no parameter is supplied, all music should be stopped
 */
 function stopMusic(mus) {
-  if (mus) {
-    if (soundCache[mus]) {
-      soundCache[mus].stop();
-    }
-  } else {
-    Object.keys(soundCache).forEach((s) => {
-      if (s && s.fade) {
-        s.fade(undefined, 0, 1);
-      }
-      soundCache[s].stop();
-    });
-  }
+  $stopPlayback(mus, musicCache);
 }
 
 export default {
@@ -98,6 +114,7 @@ export default {
   setVolume,
   getVolume,
   playSound,
+  stopSound,
   playMusic,
   stopMusic
 };
