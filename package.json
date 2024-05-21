@@ -1,6 +1,6 @@
 {
   "name": "@atrament/web",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Atrament, a text game engine - build for web browsers",
   "main": "src/index.js",
   "files": [
@@ -19,8 +19,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@atrament/core": "1.1.0",
+    "@atrament/core": "1.2.0",
+    "fflate": "0.8.2",
     "howler": "2.2.4",
+    "jszip": "3.10.1",
     "localforage": "1.10.0",
     "nanostores": "0.10.3"
   },
