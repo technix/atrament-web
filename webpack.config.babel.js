@@ -5,12 +5,13 @@ export default (env, argv) => (
   {
     devtool: 'source-map',
     entry: {
-      app: ['./src/index.js']
+      atrament: ['./src/index.js'],
+      'atrament-jszip': ['./src/index-jszip.js']
     },
     output: {
       path: path.resolve(__dirname, 'umd'),
       publicPath: '/',
-      filename: 'atrament.js',
+      filename: '[name].js',
       globalObject: 'typeof self !== \'undefined\' ? self : this',
       library: {
         name: 'atrament',
