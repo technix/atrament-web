@@ -5,8 +5,7 @@ export default (env, argv) => (
   {
     devtool: 'source-map',
     entry: {
-      atrament: ['./src/index.js'],
-      'atrament-jszip': ['./src/index-jszip.js']
+      atrament: ['./src/index.js']
     },
     output: {
       path: path.resolve(__dirname, 'umd'),
