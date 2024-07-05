@@ -1,5 +1,7 @@
 import JSZip from 'jszip';
 
+import { loadFromJS, loadFromJSON } from './loader-common';
+
 let $gameFileType = 'plain';
 let $gamePath = '';
 let $zipContent = {};
@@ -39,7 +41,8 @@ function getAssetPath(filename) {
 }
 
 async function loadInk(filename) {
-  const response = await fetch(getAssetPath(filename));
+  const fullpath = getAssetPath(filename);
+  const response = await (fullpath.endsWith('js') ? loadFromJS(fullpath) : loadFromJSON(fullpath));
   if (response.ok) {
     return response.text();
   }
