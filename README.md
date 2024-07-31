@@ -4,7 +4,7 @@
 
 If you want to make customized Atrament build, check out [atrament-core](https://github.com/technix/atrament-core).
 
-If you are looking for example of a web application based on Atrament, check out [atrament-preact-ui](https://github.com/technix/atrament-preact-ui).
+If you are looking for example of a web application based on Atrament, check out [atrament-web-ui](https://github.com/technix/atrament-web-ui).
 
 ## Installation
 
@@ -12,7 +12,7 @@ If you are looking for example of a web application based on Atrament, check out
 
 or
 
-```<script src="https://unpkg.com/@atrament/web@1.2.1/umd/atrament.js"></script>```
+```<script src="https://unpkg.com/@atrament/web@1.3.0/umd/atrament.js"></script>```
 
 ## Usage
 
