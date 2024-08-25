@@ -12,7 +12,7 @@ If you are looking for example of a web application based on Atrament, check out
 
 or
 
-```<script src="https://unpkg.com/@atrament/web@1.3.0/umd/atrament.js"></script>```
+```<script src="https://unpkg.com/@atrament/web@2.0.0/umd/atrament.js"></script>```
 
 ## Usage
 
