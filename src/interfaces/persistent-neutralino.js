@@ -78,8 +78,13 @@ async function set(item, value) {
 }
 
 async function remove(item) {
-  await neuDeleteData(item);
-  await neuDeleteKey(item);
+  const key = normalizeKey(item);
+  try {
+    await neuDeleteData(key);
+    await neuDeleteKey(item);
+  } catch (e) {
+    console.error(e.message);
+  }
 }
 
 async function keys() {
