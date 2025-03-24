@@ -1,13 +1,11 @@
 /* global window */
 
-async function setFullscreen(enabled, setFullscreenState) {
+async function setFullscreen(enabled) {
   if (enabled) {
     await window.Neutralino.window.setFullScreen();
   } else {
     await window.Neutralino.window.exitFullScreen();
   }
-  const newFullScreenStatus = await window.Neutralino.window.isFullScreen();
-  setFullscreenState(newFullScreenStatus);
 }
 
 async function setTitle(title) {
