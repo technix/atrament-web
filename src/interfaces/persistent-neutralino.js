@@ -1,10 +1,11 @@
 
 /* global window */
+import murmur from 'murmurhash-js';
+
 const KEY_STORAGE = '__atrament_storage';
 
-function normalizeKey(key) {
-  return key.replace(/[^a-zA-Z0-9]/g, (v) => `_${v.charCodeAt(0)}_`);
-}
+// storage keys update queue
+let storageLock = Promise.resolve();
 
 // neutralino functions
 
@@ -31,24 +32,33 @@ async function neuDeleteData(key) {
 
 // key handling
 
+function normalizeKey(key) {
+  return `storage_${murmur(key)}`;
+}
+
 async function neuSetKey(key, item) {
-  let storageKeys = await neuGetData(KEY_STORAGE);
-  if (storageKeys === null) {
-    storageKeys = {};
-  }
-  storageKeys[item] = key;
-  await neuSetData(KEY_STORAGE, storageKeys);
+  storageLock = storageLock.then(async () => {
+    let storageKeys = await neuGetData(KEY_STORAGE);
+    if (storageKeys === null) {
+      storageKeys = {};
+    }
+    storageKeys[item] = key;
+    await neuSetData(KEY_STORAGE, storageKeys);
+  }).catch((e) => console.error(e.message));
+  return storageLock;
 }
 
 async function neuDeleteKey(item) {
-  let storageKeys = await neuGetData(KEY_STORAGE);
-  if (storageKeys === null) {
-    storageKeys = {};
-  }
-  delete storageKeys[item];
-  await neuSetData(KEY_STORAGE, storageKeys);
+  storageLock = storageLock.then(async () => {
+    let storageKeys = await neuGetData(KEY_STORAGE);
+    if (storageKeys === null) {
+      storageKeys = {};
+    }
+    delete storageKeys[item];
+    await neuSetData(KEY_STORAGE, storageKeys);
+  }).catch((e) => console.error(e.message));
+  return storageLock;
 }
-
 
 // interface functions
 
