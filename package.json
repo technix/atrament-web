@@ -1,6 +1,6 @@
 {
   "name": "@atrament/web",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Atrament, a text game engine - build for web browsers",
   "main": "src/index.js",
   "files": [
@@ -24,6 +24,7 @@
     "howler": "2.2.4",
     "jszip": "3.10.1",
     "localforage": "1.10.0",
+    "murmurhash-js": "1.0.0",
     "nanostores": "0.11.2"
   },
   "devDependencies": {
