@@ -4,9 +4,6 @@ import TerserPlugin from 'terser-webpack-plugin'; /* eslint-ignore */
 export default (env, argv) => (
   {
     devtool: 'source-map',
-    entry: {
-      atrament: ['./src/index.js']
-    },
     output: {
       path: path.resolve(__dirname, 'umd'),
       publicPath: '/',
