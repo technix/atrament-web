@@ -7,7 +7,7 @@ export default (env, argv) => (
     output: {
       path: path.resolve(__dirname, 'umd'),
       publicPath: '/',
-      filename: '[name].js',
+      filename: 'atrament.js',
       globalObject: 'typeof self !== \'undefined\' ? self : this',
       library: {
         name: 'atrament',
