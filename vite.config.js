@@ -19,7 +19,7 @@ export default defineConfig({
         entryFileNames: 'atrament.js',
         name: 'atrament',
         format: 'umd',
-        dir: 'umd'
+        dir: 'dist'
       }]
     }
   }

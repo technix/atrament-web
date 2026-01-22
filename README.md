@@ -1,4 +1,4 @@
-# Atrament
+# @atrament/web
 
 `atrament-web` is a browser build of `atrament-core`, a framework for choice-based games, built around `inkjs`. 
 
@@ -6,13 +6,15 @@ If you want to make customized Atrament build, check out [atrament-core](https:/
 
 If you are looking for example of a web application based on Atrament, check out [atrament-web-ui](https://github.com/technix/atrament-web-ui).
 
+[Documentation](https://atrament.ink/)
+
 ## Installation
 
 ```npm install @atrament/web```
 
 or
 
-```<script src="https://unpkg.com/@atrament/web@2.1.3/umd/atrament.js"></script>```
+```<script src="https://unpkg.com/@atrament/web@latest/dist/atrament.js"></script>```
 
 ## Usage
 

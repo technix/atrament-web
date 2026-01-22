@@ -11,8 +11,7 @@
     }
   },
   "files": [
-    "dist",
-    "umd"
+    "dist"
   ],
   "scripts": {
     "build": "vite build",
