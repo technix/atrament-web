@@ -1,6 +1,6 @@
 {
   "name": "@atrament/web",
-  "version": "2.1.4",
+  "version": "2.1.5-dev",
   "description": "Atrament, a text game engine - build for web browsers",
   "type": "module",
   "main": "dist/index.mjs",
