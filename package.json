@@ -28,7 +28,7 @@
     "@atrament/core": "2.1.4",
     "fflate": "0.8.2",
     "howler": "2.2.4",
-    "localforage": "1.10.0",
+    "idb-keyval": "6.2.2",
     "murmurhash-js": "1.0.0",
     "nanostores": "1.1.0"
   },
