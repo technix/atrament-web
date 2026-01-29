@@ -37,6 +37,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
     "path": "0.12.7",
-    "vite": "^7.3.1"
+    "vite": "7.3.1",
+    "vite-plugin-bundlesize": "0.3.0"
   }
 }

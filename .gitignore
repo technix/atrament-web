@@ -4,3 +4,4 @@
 /node_modules/
 .eslintcache
 npm-debug.*
+bundlemeta.json
