@@ -1,7 +1,4 @@
-/* eslint-disable no-await-in-loop */
-
 import { unzip } from 'fflate';
-
 import { loadFromJS, loadFromJSON, onProgress, fetchWithProgress } from './loader-common';
 
 let $gameFileType = 'plain';
@@ -25,11 +22,20 @@ async function init(path) {
   }
 }
 
+
 function getAssetPath(filename) {
-  if ($gameFileType === 'zip') {
-    return $zipContent[filename];
+  if (!filename) {
+    return null;
   }
-  return `${$gamePath}/${filename}`;
+  const asset = `${filename}`;
+  if (asset.startsWith('http://') || asset.startsWith('https://')) {
+    // an external asset
+    return asset;
+  }
+  if ($gameFileType === 'zip') {
+    return $zipContent[asset];
+  }
+  return `${$gamePath}/${asset}`;
 }
 
 
