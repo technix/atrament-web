@@ -1,4 +1,4 @@
-import { Howl, Howler } from 'howler';
+import { Howl, Howler } from 'howler/src/howler.core';
 
 const soundCache = {};
 const musicCache = {};
