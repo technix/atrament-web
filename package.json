@@ -30,14 +30,14 @@
     "howler": "2.2.4",
     "idb-keyval": "6.2.2",
     "murmurhash-js": "1.0.0",
-    "nanostores": "1.1.0"
+    "nanostores": "1.2.0"
   },
   "devDependencies": {
     "eslint": "8.49.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
     "path": "0.12.7",
-    "vite": "7.3.1",
+    "vite": "8.0.6",
     "vite-plugin-bundlesize": "0.3.0"
   }
 }
