@@ -1,4 +1,4 @@
-import { unzip } from 'fflate';
+import { unzipSync } from 'fflate';
 import { loadFromJS, loadFromJSON, onProgress, fetchWithProgress } from './loader-common';
 
 let $gameFileType = 'plain';
@@ -12,11 +12,10 @@ async function init(path) {
   if ($gameFileType === 'zip') {
     $zipContent = {}; // clear zip content
     const zipContent = await fetchWithProgress(path);
-    await unzip(
-      zipContent,
-      (err, unzipped) => Object.entries(unzipped).forEach(([filepath, content]) => {
-        $zipContent[filepath] = URL.createObjectURL(new Blob([content]));
-      }));
+    const unzipped = unzipSync(zipContent);
+    Object.entries(unzipped).forEach(([filepath, content]) => {
+      $zipContent[filepath] = URL.createObjectURL(new Blob([content]));
+    });
   } else {
     $gamePath = path;
   }
