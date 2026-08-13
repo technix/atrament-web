@@ -15,23 +15,27 @@ export default defineConfig({
   build: {
     sourcemap: 'hidden',
     lib: {
-      entry: resolve(__dirname, 'src/index.js')
+      entry: resolve(import.meta.dirname, 'src/index.js')
     },
     rollupOptions: {
-      output: [{
-        entryFileNames: '[name].cjs',
-        format: 'cjs',
-        dir: 'dist'
-      }, {
-        entryFileNames: '[name].mjs',
-        format: 'es',
-        dir: 'dist'
-      }, {
-        entryFileNames: 'atrament.js',
-        name: 'atrament',
-        format: 'umd',
-        dir: 'dist'
-      }]
+      output: [
+        {
+          entryFileNames: '[name].cjs',
+          format: 'cjs',
+          dir: 'dist'
+        },
+        {
+          entryFileNames: '[name].mjs',
+          format: 'es',
+          dir: 'dist'
+        },
+        {
+          entryFileNames: 'atrament.js',
+          name: 'atrament',
+          format: 'umd',
+          dir: 'dist'
+        }
+      ]
     }
   }
 });

@@ -26,18 +26,19 @@
   "license": "MIT",
   "dependencies": {
     "@atrament/core": "2.1.5",
-    "fflate": "0.8.2",
+    "fflate": "0.8.3",
     "howler": "2.2.4",
-    "idb-keyval": "6.2.2",
+    "idb-keyval": "6.3.0",
     "murmurhash-js": "1.0.0",
-    "nanostores": "1.2.0"
+    "nanostores": "1.4.2"
   },
   "devDependencies": {
-    "eslint": "8.49.0",
-    "eslint-config-airbnb-base": "15.0.0",
-    "eslint-plugin-import": "2.32.0",
+    "@stylistic/eslint-plugin": "5.10.0",
+    "eslint": "10.8.1",
+    "eslint-stylistic-airbnb": "3.2.0",
+    "globals": "17.11.0",
     "path": "0.12.7",
-    "vite": "8.0.6",
+    "vite": "8.2.1",
     "vite-plugin-bundlesize": "0.3.0"
   }
 }
