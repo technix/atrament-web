@@ -1,4 +1,10 @@
-import { get as getItem, set as setItem, del, keys as storeKeys, createStore } from 'idb-keyval';
+import {
+  get as getItem,
+  set as setItem,
+  del,
+  keys as storeKeys,
+  createStore
+} from 'idb-keyval';
 
 let storage;
 

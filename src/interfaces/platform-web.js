@@ -1,10 +1,8 @@
-/* global document */
-
 async function setFullscreen(enabled, setFullscreenState) {
   if (enabled && !document.fullscreenElement) {
     try {
       await document.documentElement.requestFullscreen();
-    } catch (e) {
+    } catch (_e) {
       setFullscreenState(false);
     }
   } else if (document.fullscreenElement && document.exitFullscreen) {

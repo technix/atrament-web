@@ -1,5 +1,3 @@
-/* global window, document */
-
 let $onProgress = () => {};
 
 export async function loadFromJSON(filename) {

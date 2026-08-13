@@ -1,5 +1,10 @@
 import { unzipSync } from 'fflate';
-import { loadFromJS, loadFromJSON, onProgress, fetchWithProgress } from './loader-common';
+import {
+  loadFromJS,
+  loadFromJSON,
+  onProgress,
+  fetchWithProgress
+} from './loader-common';
 
 let $gameFileType = 'plain';
 let $gamePath = '';
@@ -21,7 +26,6 @@ async function init(path) {
   }
 }
 
-
 function getAssetPath(filename) {
   if (!filename) {
     return null;
@@ -37,13 +41,11 @@ function getAssetPath(filename) {
   return `${$gamePath}/${asset}`;
 }
 
-
 async function loadInk(filename) {
   const fullpath = getAssetPath(filename);
   const inkScriptContent = await (fullpath.endsWith('js') ? loadFromJS(fullpath) : loadFromJSON(fullpath));
   return inkScriptContent;
 }
-
 
 export default {
   init,

@@ -1,5 +1,3 @@
-/* global window */
-
 import atrament from '@atrament/core';
 
 import loader from './interfaces/loader-web-fflate';

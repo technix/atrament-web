@@ -1,5 +1,3 @@
-/* global window */
-
 async function setFullscreen(enabled) {
   if (enabled) {
     await window.Neutralino.window.setFullScreen();

@@ -1,5 +1,3 @@
-
-/* global window */
 import murmur from 'murmurhash-js';
 
 const KEY_STORAGE = '__atrament_storage';

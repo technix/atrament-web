@@ -64,11 +64,9 @@ function getVolume() {
   - snd: path to a sound file.
 */
 function playSound(snd) {
-  if (!soundCache[snd]) {
-    soundCache[snd] = new Howl({
-      src: [snd]
-    });
-  }
+  soundCache[snd] ||= new Howl({
+    src: [snd]
+  });
   soundCache[snd].play();
 }
 
@@ -88,13 +86,11 @@ function stopSound(snd) {
   - loop: is track looped? true by default
 */
 function playMusic(mus, loop = true) {
-  if (!musicCache[mus]) {
-    musicCache[mus] = new Howl({
-      src: [mus],
-      html5: true, // streaming
-      loop
-    });
-  }
+  musicCache[mus] ||= new Howl({
+    src: [mus],
+    html5: true, // streaming
+    loop
+  });
   musicCache[mus].play();
 }
 
