@@ -3,6 +3,28 @@ import { Howl, Howler } from 'howler/src/howler.core';
 const soundCache = {};
 const musicCache = {};
 
+function _fadeOutAndStop(h, fadeOut) {
+  if (fadeOut && fadeOut > 0) {
+    const from = h.volume();
+    h.fade(from, 0, fadeOut);
+    setTimeout(() => h.stop(), fadeOut);
+  } else {
+    h.stop();
+  }
+}
+
+function _playWithFadeIn(h, fadeIn) {
+  if (fadeIn && fadeIn > 0) {
+    // start from 0 and fade to the current master volume
+    h.volume(0);
+    const id = h.play();
+    const target = Howler.volume();
+    h.fade(0, target, fadeIn, id);
+  } else {
+    h.play();
+  }
+}
+
 // stop playback of given sound file or all cached sound files
 function $stopPlayback(file, cache, config = {}) {
   const fadeOut = config.fadeOut;
@@ -10,25 +32,13 @@ function $stopPlayback(file, cache, config = {}) {
   if (file) {
     const h = cache[file];
     if (h) {
-      if (fadeOut && fadeOut > 0) {
-        const from = h.volume();
-        h.fade(from, 0, fadeOut);
-        setTimeout(() => h.stop(), fadeOut);
-      } else {
-        h.stop();
-      }
+      _fadeOutAndStop(h, fadeOut);
     }
   } else {
     Object.keys(cache).forEach((key) => {
       const h = cache[key];
       if (!h) return;
-      if (fadeOut && fadeOut > 0) {
-        const from = h.volume();
-        h.fade(from, 0, fadeOut);
-        setTimeout(() => h.stop(), fadeOut);
-      } else {
-        h.stop();
-      }
+      _fadeOutAndStop(h, fadeOut);
     });
   }
 }
@@ -87,15 +97,7 @@ function playSound(snd, config = {}) {
   const h = soundCache[snd];
   const fadeIn = config.fadeIn;
 
-  if (fadeIn && fadeIn > 0) {
-    // start from 0 and fade to the current master volume
-    h.volume(0);
-    const id = h.play();
-    const target = Howler.volume();
-    h.fade(0, target, fadeIn, id);
-  } else {
-    h.play();
-  }
+  _playWithFadeIn(h, fadeIn);
 }
 
 /*
@@ -125,14 +127,7 @@ function playMusic(mus, loop = true, config = {}) {
   const h = musicCache[mus];
   const fadeIn = config.fadeIn;
 
-  if (fadeIn && fadeIn > 0) {
-    h.volume(0);
-    const id = h.play();
-    const target = Howler.volume();
-    h.fade(0, target, fadeIn, id);
-  } else {
-    h.play();
-  }
+  _playWithFadeIn(h, fadeIn);
 }
 
 /*
