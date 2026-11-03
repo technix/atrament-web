@@ -36,6 +36,7 @@ async function keys() {
 }
 
 export default {
+  driver: 'idb',
   init,
   exists,
   get,
