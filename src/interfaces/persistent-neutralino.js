@@ -101,6 +101,7 @@ async function keys() {
 }
 
 export default {
+  driver: 'neutralino',
   init,
   exists,
   get,

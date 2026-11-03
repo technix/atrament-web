@@ -40,6 +40,7 @@ async function keys() {
 }
 
 export default {
+  driver: 'localstorage',
   init,
   exists,
   get,
