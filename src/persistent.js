@@ -24,15 +24,21 @@ const isLocalStorage = (() => {
   }
 })();
 
+const driverInfo = (driver) => console.log(`Atrament persistent driver: ${driver}`);
+
 export default function detectPersistent() {
   if (isNeutralino) {
+    driverInfo('neutralino');
     return persistentNeutralino;
   }
   if (isIndexedDB) {
+    driverInfo('indexeddb');
     return persistentIdb;
   }
   if (isLocalStorage) {
+    driverInfo('localstorage');
     return persistentLocalstorage;
   }
+  driverInfo('memory');
   return null;
 }

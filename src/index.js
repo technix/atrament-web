@@ -19,6 +19,6 @@ if (persistentDriver) {
   interfaces.persistent = persistentDriver;
 }
 
-atrament.defineInterfaces();
+atrament.defineInterfaces(interfaces);
 
 export default atrament;
