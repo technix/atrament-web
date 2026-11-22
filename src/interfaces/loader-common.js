@@ -40,7 +40,8 @@ export async function fetchWithProgress(path) {
     throw new Error(`Failed to fetch file: ${path}. Error ${response.status} ${errorBody}`);
   }
   const reader = response.body.getReader();
-  const contentLength = +response.headers.get('Content-Length');
+  const headerLength = Number(response.headers.get('Content-Length'));
+  const contentLength = Number.isFinite(headerLength) && headerLength > 0 ? headerLength : null;
   const chunks = [];
   let receivedLength = 0;
   for (;;) {
@@ -50,7 +51,9 @@ export async function fetchWithProgress(path) {
     }
     chunks.push(value);
     receivedLength += value.length;
-    const percent = Math.round((receivedLength * 100) / contentLength);
+    const percent = contentLength === null
+      ? null
+      : Math.min(100, Math.round((receivedLength * 100) / contentLength));
     $onProgress({ percent, receivedLength, contentLength });
   }
   const chunksAll = new Uint8Array(receivedLength);
