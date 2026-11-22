@@ -22,6 +22,12 @@ function $getExtension(filename) {
   return match ? match[1].toLowerCase() : '';
 }
 
+// make zip entry names and asset lookups match:
+// "\" -> "/", strip leading "./" and "/"
+function $normalizePath(filepath) {
+  return `${filepath}`.replace(/\\/g, '/').replace(/^(\.?\/)+/, '');
+}
+
 // release blob URLs created for the previous zip game
 function $revokeBlobURLs() {
   $blobURLs.forEach((url) => URL.revokeObjectURL(url));
@@ -36,8 +42,9 @@ async function init(path) {
   if ($gameFileType === 'zip') {
     const zipContent = await fetchWithProgress(path);
     const unzipped = unzipSync(zipContent);
-    Object.entries(unzipped).forEach(([filepath, content]) => {
-      if (filepath.endsWith('/')) {
+    Object.entries(unzipped).forEach(([entryName, content]) => {
+      const filepath = $normalizePath(entryName);
+      if (!filepath || filepath.endsWith('/')) {
         return;
       }
       const ext = $getExtension(filepath);
@@ -61,7 +68,7 @@ function getAssetPath(filename) {
     return asset;
   }
   if ($gameFileType === 'zip') {
-    return $zipContent[asset];
+    return $zipContent[$normalizePath(asset)] ?? null;
   }
   return `${$gamePath}/${asset}`;
 }
