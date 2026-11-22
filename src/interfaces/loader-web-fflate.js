@@ -43,7 +43,11 @@ function getAssetPath(filename) {
 
 async function loadInk(filename) {
   const fullpath = getAssetPath(filename);
-  const inkScriptContent = await (fullpath.endsWith('js') ? loadFromJS(fullpath) : loadFromJSON(fullpath));
+  if (!fullpath) {
+    throw new Error(`Ink story file not found: ${filename}`);
+  }
+  const isJS = filename.endsWith('.js');
+  const inkScriptContent = await (isJS ? loadFromJS(fullpath) : loadFromJSON(fullpath));
   return inkScriptContent;
 }
 
