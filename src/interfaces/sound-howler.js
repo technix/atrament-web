@@ -10,11 +10,14 @@ function $stopPlayback(file, cache) {
       cache[file].stop();
     }
   } else {
-    Object.keys(cache).forEach((s) => {
-      if (s && s.fade) {
-        s.fade(undefined, 0, 1);
+    Object.values(cache).forEach((s) => {
+      if (s.fade && s.playing()) {
+        const volume = s.volume();
+        s.fade(volume, 0, 1);
+        s.stop();
+        s.volume(volume);
       }
-      cache[s].stop();
+      s.stop();
     });
   }
 }
