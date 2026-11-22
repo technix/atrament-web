@@ -1,9 +1,15 @@
-async function setFullscreen(enabled) {
-  if (enabled) {
-    await window.Neutralino.window.setFullScreen();
-  } else {
-    await window.Neutralino.window.exitFullScreen();
+// setFullscreenState(value) is called only if the state was changed successfully
+async function setFullscreen(enabled, setFullscreenState) {
+  try {
+    if (enabled) {
+      await window.Neutralino.window.setFullScreen();
+    } else {
+      await window.Neutralino.window.exitFullScreen();
+    }
+  } catch (_e) {
+    return;
   }
+  setFullscreenState?.(enabled);
 }
 
 async function setTitle(title) {
