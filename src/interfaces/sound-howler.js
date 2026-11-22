@@ -29,7 +29,7 @@ function $stopPlayback(file, cache) {
   }) - initialize sound with given configuration
 */
 function init(cfg) {
-  mute(cfg.mute);
+  mute(cfg.mute === true);
   setVolume(cfg.volume);
 }
 
