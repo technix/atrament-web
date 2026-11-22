@@ -6,6 +6,9 @@ const KEY_STORAGE = '__atrament_storage';
 // Used by storage.getData in the Neutralino source (api/storage/storage.cpp).
 const ERR_KEY_NOT_FOUND = 'NE_ST_NOSTKEX';
 
+// Storage namespace, set by init() and used to prefix all storage keys.
+let storageNamespace;
+
 // storage keys update queue
 let storageLock = Promise.resolve();
 
@@ -37,8 +40,12 @@ async function neuDeleteData(key) {
 
 // key handling
 
-function normalizeKey(key) {
-  return `storage_${murmur(key)}`;
+function normalizeKey(item) {
+  return `storage_${storageNamespace}_${murmur(item)}`;
+}
+
+function indexKey() {
+  return `${KEY_STORAGE}_${storageNamespace}`;
 }
 
 // Runs an update of the key index in the queue. The index is rewritten
@@ -46,9 +53,9 @@ function normalizeKey(key) {
 // read can't wipe it. Errors are passed to the caller.
 function updateStorageKeys(updateFn) {
   const operation = storageLock.then(async () => {
-    const storageKeys = (await neuGetData(KEY_STORAGE)) ?? {};
+    const storageKeys = (await neuGetData(indexKey())) ?? {};
     updateFn(storageKeys);
-    await neuSetData(KEY_STORAGE, storageKeys);
+    await neuSetData(indexKey(), storageKeys);
   });
   storageLock = operation.catch(() => {});
   return operation;
@@ -68,7 +75,8 @@ async function neuDeleteKey(item) {
 
 // interface functions
 
-function init() {
+function init(prefix) {
+  storageNamespace = murmur(String(prefix));
 }
 
 async function exists(item) {
@@ -82,26 +90,17 @@ async function get(item) {
 
 async function set(item, value) {
   const key = normalizeKey(item);
-  try {
-    await neuSetData(key, value);
-    await neuSetKey(key, item);
-  } catch (e) {
-    console.error(e.message);
-  }
+  await neuSetData(key, value);
+  await neuSetKey(key, item);
 }
 
 async function remove(item) {
-  const key = normalizeKey(item);
-  try {
-    await neuDeleteData(key);
-    await neuDeleteKey(item);
-  } catch (e) {
-    console.error(e.message);
-  }
+  await neuDeleteData(normalizeKey(item));
+  await neuDeleteKey(item);
 }
 
 async function keys() {
-  const storageKeys = await neuGetData(KEY_STORAGE);
+  const storageKeys = await neuGetData(indexKey());
   return Object.keys(storageKeys ?? {});
 }
 
