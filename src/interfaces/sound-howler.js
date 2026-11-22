@@ -121,8 +121,23 @@ function stopMusic(mus) {
   });
 }
 
+/*
+  reset()
+  Stops and unloads all sounds and music, and clears the caches.
+  Call it when the game changes, before the old asset URLs are released.
+*/
+function reset() {
+  [soundCache, musicCache].forEach((cache) => {
+    Object.keys(cache).forEach((f) => {
+      cache[f].unload();
+      delete cache[f];
+    });
+  });
+}
+
 export default {
   init,
+  reset,
   mute,
   isMuted,
   setVolume,

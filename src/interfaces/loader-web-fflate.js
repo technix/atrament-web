@@ -9,6 +9,7 @@ import {
 let $gameFileType = 'plain';
 let $gamePath = '';
 let $zipContent = {};
+let $blobURLs = [];
 
 // MIME types for zip assets that browsers won't render from an untyped blob
 const MIME_TYPES = {
@@ -21,17 +22,28 @@ function $getExtension(filename) {
   return match ? match[1].toLowerCase() : '';
 }
 
+// release blob URLs created for the previous zip game
+function $revokeBlobURLs() {
+  $blobURLs.forEach((url) => URL.revokeObjectURL(url));
+  $blobURLs = [];
+}
+
 async function init(path) {
   $gameFileType = path.endsWith('.zip') ? 'zip' : 'plain';
   $gamePath = '';
+  $revokeBlobURLs();
   $zipContent = {}; // clear zip content
   if ($gameFileType === 'zip') {
     const zipContent = await fetchWithProgress(path);
     const unzipped = unzipSync(zipContent);
     Object.entries(unzipped).forEach(([filepath, content]) => {
+      if (filepath.endsWith('/')) {
+        return;
+      }
       const ext = $getExtension(filepath);
       const type = MIME_TYPES[ext] || '';
       const url = URL.createObjectURL(new Blob([content], { type }));
+      $blobURLs.push(url);
       $zipContent[filepath] = ext ? `${url}#file.${ext}` : url;
     });
   } else {
