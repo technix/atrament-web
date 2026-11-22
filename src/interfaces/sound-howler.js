@@ -41,7 +41,7 @@ function mute(state = true) {
   isMuted(true/false) - returns true if sound is muted, false otherwise
 */
 function isMuted() {
-  return Howler.muted;
+  return Howler._muted; // eslint-disable-line no-underscore-dangle
 }
 
 /*
