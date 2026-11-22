@@ -2,19 +2,26 @@ import murmur from 'murmurhash-js';
 
 const KEY_STORAGE = '__atrament_storage';
 
+// Neutralino error code for a storage key that doesn't exist.
+// Used by storage.getData in the Neutralino source (api/storage/storage.cpp).
+const ERR_KEY_NOT_FOUND = 'NE_ST_NOSTKEX';
+
 // storage keys update queue
 let storageLock = Promise.resolve();
 
 // neutralino functions
 
 async function neuGetData(key) {
+  let data;
   try {
-    const data = await window.Neutralino.storage.getData(key);
-    return JSON.parse(data);
+    data = await window.Neutralino.storage.getData(key);
   } catch (e) {
-    console.warn(e.message);
-    return null;
+    if (e?.code === ERR_KEY_NOT_FOUND) {
+      return undefined;
+    }
+    throw e;
   }
+  return JSON.parse(data);
 }
 
 async function neuSetData(key, value) {
@@ -34,28 +41,29 @@ function normalizeKey(key) {
   return `storage_${murmur(key)}`;
 }
 
-async function neuSetKey(key, item) {
-  storageLock = storageLock.then(async () => {
-    let storageKeys = await neuGetData(KEY_STORAGE);
-    if (storageKeys === null) {
-      storageKeys = {};
-    }
-    storageKeys[item] = key;
+// Runs an update of the key index in the queue. The index is rewritten
+// only after a successful read (or if it doesn't exist yet), so a failed
+// read can't wipe it. Errors are passed to the caller.
+function updateStorageKeys(updateFn) {
+  const operation = storageLock.then(async () => {
+    const storageKeys = (await neuGetData(KEY_STORAGE)) ?? {};
+    updateFn(storageKeys);
     await neuSetData(KEY_STORAGE, storageKeys);
-  }).catch((e) => console.error(e.message));
-  return storageLock;
+  });
+  storageLock = operation.catch(() => {});
+  return operation;
+}
+
+async function neuSetKey(key, item) {
+  return updateStorageKeys((storageKeys) => {
+    storageKeys[item] = key;
+  });
 }
 
 async function neuDeleteKey(item) {
-  storageLock = storageLock.then(async () => {
-    let storageKeys = await neuGetData(KEY_STORAGE);
-    if (storageKeys === null) {
-      storageKeys = {};
-    }
+  return updateStorageKeys((storageKeys) => {
     delete storageKeys[item];
-    await neuSetData(KEY_STORAGE, storageKeys);
-  }).catch((e) => console.error(e.message));
-  return storageLock;
+  });
 }
 
 // interface functions
@@ -69,10 +77,7 @@ async function exists(item) {
 }
 
 async function get(item) {
-  const storageKeys = await neuGetData(KEY_STORAGE);
-  const key = storageKeys === null ? normalizeKey(item) : storageKeys[item];
-  const value = await neuGetData(key);
-  return value;
+  return neuGetData(normalizeKey(item));
 }
 
 async function set(item, value) {
@@ -97,7 +102,7 @@ async function remove(item) {
 
 async function keys() {
   const storageKeys = await neuGetData(KEY_STORAGE);
-  return storageKeys === null ? [] : Object.keys(storageKeys);
+  return Object.keys(storageKeys ?? {});
 }
 
 export default {
