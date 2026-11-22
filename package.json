@@ -16,7 +16,9 @@
   "scripts": {
     "build": "vite build",
     "prepack": "npm run build",
-    "lint": "eslint ./src/ --ext .js"
+    "lint": "eslint ./src/ ./test --ext .js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "author": "Serhii Mozhaiskyi (sergei.mozhaisky@gmail.com)",
   "repository": {
@@ -36,9 +38,12 @@
     "@stylistic/eslint-plugin": "5.10.0",
     "eslint": "10.15.0",
     "eslint-stylistic-airbnb": "3.2.0",
+    "fake-indexeddb": "6.2.8",
     "globals": "17.14.0",
+    "jsdom": "31.0.1",
     "path": "0.12.7",
     "vite": "8.3.8",
-    "vite-plugin-bundlesize": "0.3.0"
+    "vite-plugin-bundlesize": "0.3.0",
+    "vitest": "5.1.1"
   }
 }

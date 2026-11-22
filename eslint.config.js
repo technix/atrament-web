@@ -16,5 +16,11 @@ export default [
       'no-use-before-define': ['error', { functions: false, classes: false }],
       'no-unused-vars': ['error', { caughtErrorsIgnorePattern: '^_' }]
     }
+  },
+  {
+    files: ['test/**/*.js'],
+    languageOptions: {
+      globals: globals.vitest
+    }
   }
 ];
