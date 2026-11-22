@@ -10,27 +10,37 @@ export async function appendScript(src) {
   return new Promise((resolve, reject) => {
     const el = document.createElement('script');
     el.src = src;
-    el.addEventListener('load', resolve);
-    el.addEventListener('error', reject);
+    el.addEventListener('load', () => resolve(el));
+    el.addEventListener('error', (e) => {
+      el.remove();
+      reject(e);
+    });
     document.body.append(el);
   });
 }
 
 export async function loadFromJS(filename) {
-  let inkscript = '';
+  delete window.storyContent;
+  let scriptElement;
   try {
-    await appendScript(filename);
+    scriptElement = await appendScript(filename);
   } catch (e) {
     console.error(e);
     throw Error(`Failed to fetch file: ${filename}`);
   }
+  // remove temporary script element and storyContent variable
+  scriptElement.remove();
+  const { storyContent } = window;
+  delete window.storyContent;
+  if (storyContent === undefined) {
+    throw Error(`Ink script does not define storyContent: ${filename}`);
+  }
   try {
-    inkscript = JSON.stringify(window.storyContent);
+    return JSON.stringify(storyContent);
   } catch (e) {
     console.error(e);
     throw Error(`Failed to parse Ink script: ${filename}`);
   }
-  return inkscript;
 }
 
 export async function fetchWithProgress(path) {
