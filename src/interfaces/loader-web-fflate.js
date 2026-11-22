@@ -11,11 +11,10 @@ let $gamePath = '';
 let $zipContent = {};
 
 async function init(path) {
-  if (path.endsWith('.zip')) {
-    $gameFileType = 'zip';
-  }
+  $gameFileType = path.endsWith('.zip') ? 'zip' : 'plain';
+  $gamePath = '';
+  $zipContent = {}; // clear zip content
   if ($gameFileType === 'zip') {
-    $zipContent = {}; // clear zip content
     const zipContent = await fetchWithProgress(path);
     const unzipped = unzipSync(zipContent);
     Object.entries(unzipped).forEach(([filepath, content]) => {
