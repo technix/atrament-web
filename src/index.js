@@ -21,4 +21,6 @@ if (persistentDriver) {
 
 atrament.defineInterfaces(interfaces);
 
+console.log(`Atrament persistent driver: ${atrament.interfaces.persistent.driver || 'memory'}`);
+
 export default atrament;

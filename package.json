@@ -34,11 +34,11 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "5.10.0",
-    "eslint": "10.14.0",
+    "eslint": "10.15.0",
     "eslint-stylistic-airbnb": "3.2.0",
     "globals": "17.14.0",
     "path": "0.12.7",
-    "vite": "8.3.7",
+    "vite": "8.3.8",
     "vite-plugin-bundlesize": "0.3.0"
   }
 }

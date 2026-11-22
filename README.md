@@ -47,7 +47,7 @@ See [Atrament core documentation](https://github.com/technix/atrament-core/blob/
 ## Components
 
 - loader: fetch + fflate/jszip
-- persistent: [localForage](https://github.com/localForage/localForage) / Neutralinojs storage
+- persistent: [idb-keyval](https://github.com/jakearchibald/idb-keyval) / localStorage / Neutralinojs storage
 - state: [nanostores](https://github.com/nanostores/nanostores)
 - sound: [howler.js](https://github.com/goldfire/howler.js)
 - platform: web / Neutralinojs
