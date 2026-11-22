@@ -10,6 +10,17 @@ let $gameFileType = 'plain';
 let $gamePath = '';
 let $zipContent = {};
 
+// MIME types for zip assets that browsers won't render from an untyped blob
+const MIME_TYPES = {
+  svg: 'image/svg+xml',
+  css: 'text/css'
+};
+
+function $getExtension(filename) {
+  const match = /\.([^./]+)$/.exec(filename);
+  return match ? match[1].toLowerCase() : '';
+}
+
 async function init(path) {
   $gameFileType = path.endsWith('.zip') ? 'zip' : 'plain';
   $gamePath = '';
@@ -18,7 +29,10 @@ async function init(path) {
     const zipContent = await fetchWithProgress(path);
     const unzipped = unzipSync(zipContent);
     Object.entries(unzipped).forEach(([filepath, content]) => {
-      $zipContent[filepath] = URL.createObjectURL(new Blob([content]));
+      const ext = $getExtension(filepath);
+      const type = MIME_TYPES[ext] || '';
+      const url = URL.createObjectURL(new Blob([content], { type }));
+      $zipContent[filepath] = ext ? `${url}#file.${ext}` : url;
     });
   } else {
     $gamePath = path;
