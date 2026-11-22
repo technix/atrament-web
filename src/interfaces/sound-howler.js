@@ -55,7 +55,7 @@ function setVolume(volume) {
   getVolume() - returns current volume
 */
 function getVolume() {
-  return Howler.volume * 100;
+  return Howler.volume() * 100;
 }
 
 /*
