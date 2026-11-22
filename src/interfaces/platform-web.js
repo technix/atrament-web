@@ -21,7 +21,32 @@ async function exitFullscreen() {
   }
 }
 
+// last callback passed to setFullscreen and the last state reported to it
+let fullscreenStateCallback = null;
+let reportedFullscreenState = null;
+
+function reportFullscreenState() {
+  const state = !!getFullscreenElement();
+  if (fullscreenStateCallback && state !== reportedFullscreenState) {
+    reportedFullscreenState = state;
+    fullscreenStateCallback(state);
+  }
+}
+
+// fullscreen can also be changed outside the app (Esc, browser UI)
+document.addEventListener('fullscreenchange', reportFullscreenState);
+document.addEventListener('webkitfullscreenchange', reportFullscreenState);
+
+// setFullscreenState(value) is called with the resulting fullscreen state:
+// `enabled` on success, or the actual state if the request failed.
+// It is also called later if the user enters or leaves fullscreen
+// with the browser controls.
 async function setFullscreen(enabled, setFullscreenState) {
+  if (setFullscreenState) {
+    fullscreenStateCallback = setFullscreenState;
+  }
+  // the caller has just set its value to `enabled`
+  reportedFullscreenState = enabled;
   const isFullscreen = !!getFullscreenElement();
   try {
     if (enabled) {
@@ -32,8 +57,11 @@ async function setFullscreen(enabled, setFullscreenState) {
       await exitFullscreen();
     }
   } catch (_e) {
-    // report the actual state back to the caller
-    setFullscreenState?.(!!getFullscreenElement());
+    // the actual state is reported below
+  }
+  if (setFullscreenState) {
+    reportedFullscreenState = !!getFullscreenElement();
+    setFullscreenState(reportedFullscreenState);
   }
 }
 
