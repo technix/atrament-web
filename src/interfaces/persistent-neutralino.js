@@ -6,8 +6,8 @@ const KEY_STORAGE = '__atrament_storage';
 // Used by storage.getData in the Neutralino source (api/storage/storage.cpp).
 const ERR_KEY_NOT_FOUND = 'NE_ST_NOSTKEX';
 
-// Storage namespace, set by init() and used to prefix all storage keys.
-let storageNamespace;
+// Optional storage namespace
+let storageNamespace = null;
 
 // storage keys update queue
 let storageLock = Promise.resolve();
@@ -41,11 +41,15 @@ async function neuDeleteData(key) {
 // key handling
 
 function normalizeKey(item) {
-  return `storage_${storageNamespace}_${murmur(item)}`;
+  return storageNamespace === null
+    ? `storage_${murmur(item)}`
+    : `storage_${storageNamespace}_${murmur(item)}`;
 }
 
 function indexKey() {
-  return `${KEY_STORAGE}_${storageNamespace}`;
+  return storageNamespace === null
+    ? KEY_STORAGE
+    : `${KEY_STORAGE}_${storageNamespace}`;
 }
 
 // Runs an update of the key index in the queue. The index is rewritten
@@ -75,8 +79,11 @@ async function neuDeleteKey(item) {
 
 // interface functions
 
-function init(prefix) {
-  storageNamespace = murmur(String(prefix));
+// Pass `namespace` explicitly to isolate storages within one application.
+function init(_prefix, namespace) {
+  storageNamespace = namespace === undefined || namespace === null
+    ? null
+    : murmur(String(namespace));
 }
 
 async function exists(item) {

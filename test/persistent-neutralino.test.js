@@ -7,16 +7,16 @@ let storage;
 beforeEach(() => {
   storage = createNeutralinoStorage();
   window.Neutralino = { storage };
-  driver.init('game');
+  driver.init('Atrament://127.0.0.1:12345/game');
 });
 
 afterEach(() => {
   delete window.Neutralino;
 });
 
-const ns = murmur('game');
-const indexKey = `__atrament_storage_${ns}`;
-const dataKey = (item) => `storage_${ns}_${murmur(item)}`;
+// keys without namespace, same as in @atrament/web 2.2.1
+const indexKey = '__atrament_storage';
+const dataKey = (item) => `storage_${murmur(item)}`;
 
 describe('persistent-neutralino', () => {
   it('has driver name', () => {
@@ -52,13 +52,30 @@ describe('persistent-neutralino', () => {
     expect((await driver.keys()).sort()).toEqual([...items].sort());
   });
 
-  it('isolates namespaces by prefix', async () => {
+  it('reads data written in the 2.2.1 key format', async () => {
+    storage.data.set(dataKey('settings'), '{"mute":false}');
+    storage.data.set(indexKey, JSON.stringify({ settings: dataKey('settings') }));
+    expect(await driver.exists('settings')).toBe(true);
+    expect(await driver.get('settings')).toEqual({ mute: false });
+  });
+
+  it('does not depend on the prefix (random Neutralino port)', async () => {
     await driver.set('k', 'first');
-    driver.init('other');
-    expect(await driver.keys()).toEqual([]);
-    expect(await driver.get('k')).toBeUndefined();
-    driver.init('game');
+    driver.init('Atrament://127.0.0.1:54321/game');
+    expect(await driver.keys()).toEqual(['k']);
     expect(await driver.get('k')).toBe('first');
+  });
+
+  it('isolates explicitly set namespaces', async () => {
+    const ns = murmur('game');
+    await driver.set('k', 'plain');
+    driver.init('any prefix', 'game');
+    expect(await driver.keys()).toEqual([]);
+    await driver.set('k', 'namespaced');
+    expect(storage.data.get(`storage_${ns}_${murmur('k')}`)).toBe('"namespaced"');
+    expect(JSON.parse(storage.data.get(`__atrament_storage_${ns}`))).toEqual({ k: `storage_${ns}_${murmur('k')}` });
+    driver.init('any prefix');
+    expect(await driver.get('k')).toBe('plain');
   });
 
   it('rethrows errors other than a missing key', async () => {
