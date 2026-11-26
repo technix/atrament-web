@@ -5,7 +5,8 @@ vi.mock('howler/src/howler.core', () => {
     constructor(options) {
       this.options = options;
       this.isPlaying = false;
-      this.loadState = 'loaded';
+      // real Howler starts loading in the constructor (preload: true)
+      this.loadState = 'loading';
       this.vol = 1;
       this.loopValue = options.loop ?? false;
       this.play = vi.fn(() => { this.isPlaying = true; });
@@ -140,6 +141,28 @@ describe('music', () => {
     howls[0].loadState = 'loading';
     sound.playMusic('m.mp3');
     expect(howls[0].play).toHaveBeenCalledTimes(1);
+  });
+
+  it('plays a freshly created track that is still loading', () => {
+    sound.playMusic('m.mp3');
+    expect(howls[0].state()).toBe('loading');
+    expect(howls[0].play).toHaveBeenCalledTimes(1);
+  });
+
+  it('plays a new track after all music is stopped (AUDIOLOOP)', () => {
+    sound.playMusic('a.mp3');
+    sound.stopMusic();
+    sound.playMusic('b.mp3');
+    expect(howls).toHaveLength(2);
+    expect(howls[1].play).toHaveBeenCalledTimes(1);
+  });
+
+  it('replays a loaded track that is no longer playing', () => {
+    sound.playMusic('m.mp3', false);
+    howls[0].isPlaying = false;
+    howls[0].loadState = 'loaded';
+    sound.playMusic('m.mp3', false);
+    expect(howls[0].play).toHaveBeenCalledTimes(2);
   });
 
   it('updates loop on an already cached track', () => {

@@ -2,6 +2,8 @@ import { Howl, Howler } from 'howler/src/howler.core';
 
 const soundCache = {};
 const musicCache = {};
+// music tracks for which play() was already requested
+const musicPlayRequested = new WeakSet();
 
 // stop playback of a single sound file handled by Howler
 function $stopHowl(howl) {
@@ -99,10 +101,13 @@ function playMusic(mus, loop = true) {
   });
   const howl = musicCache[mus];
   howl.loop(loop);
-  if (howl.playing() || howl.state() === 'loading') {
+  // a new Howl is in 'loading' state right after creation,
+  // so 'loading' alone does not mean that play is queued
+  if (howl.playing() || (howl.state() === 'loading' && musicPlayRequested.has(howl))) {
     // already playing, or play is queued
     return;
   }
+  musicPlayRequested.add(howl);
   howl.play();
 }
 
