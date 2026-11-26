@@ -23,7 +23,11 @@ function simulateScriptLoad(event = 'load', onLoad = () => {}) {
 beforeEach(() => {
   onProgress(() => {});
   document.body.innerHTML = '';
-  delete window.storyContent;
+  try {
+    delete window.storyContent;
+  } catch {
+    window.storyContent = undefined;
+  }
 });
 
 describe('fetchWithProgress', () => {
@@ -130,5 +134,28 @@ describe('loadFromJS', () => {
       window.storyContent = circular;
     });
     await expect(loadFromJS('story.js')).rejects.toThrow('Failed to parse Ink script: story.js');
+  });
+
+  it('handles a non-configurable storyContent (declared with var)', async () => {
+    simulateScriptLoad('load', () => {
+      // emulates `var storyContent = ...` in a classic script
+      Object.defineProperty(window, 'storyContent', {
+        value: { inkVersion: 21, root: [] },
+        writable: true,
+        enumerable: true,
+        configurable: false
+      });
+    });
+    const result = await loadFromJS('story.js');
+    expect(JSON.parse(result)).toEqual({ inkVersion: 21, root: [] });
+    expect(window.storyContent).toBeUndefined();
+
+    // a second load must not throw on the pre-load cleanup either
+    vi.restoreAllMocks();
+    simulateScriptLoad('load', () => {
+      window.storyContent = { inkVersion: 21, root: ['second'] };
+    });
+    const second = await loadFromJS('story.js');
+    expect(JSON.parse(second).root).toEqual(['second']);
   });
 });

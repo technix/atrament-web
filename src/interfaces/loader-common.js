@@ -19,8 +19,19 @@ export async function appendScript(src) {
   });
 }
 
+// Ink JS exports declare `var storyContent`, which creates a non-configurable
+// global property; `delete` on it throws in strict mode, so fall back to
+// resetting it to undefined.
+function clearStoryContent() {
+  try {
+    delete window.storyContent;
+  } catch {
+    window.storyContent = undefined;
+  }
+}
+
 export async function loadFromJS(filename) {
-  delete window.storyContent;
+  clearStoryContent();
   let scriptElement;
   try {
     scriptElement = await appendScript(filename);
@@ -31,7 +42,7 @@ export async function loadFromJS(filename) {
   // remove temporary script element and storyContent variable
   scriptElement.remove();
   const { storyContent } = window;
-  delete window.storyContent;
+  clearStoryContent();
   if (storyContent === undefined) {
     throw Error(`Ink script does not define storyContent: ${filename}`);
   }
